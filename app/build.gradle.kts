@@ -22,19 +22,9 @@ android {
         applicationId = "com.owo233.fuckmarketads"
         minSdk = 24
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1.0"
+        versionCode = 3
+        versionName = "1.1.1"
         buildConfigField("String", "BUILD_TIME", "\"${System.currentTimeMillis()}\"")
-    }
-
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            //noinspection ChromeOsAbiSupport
-            include("arm64-v8a")
-            isUniversalApk = false
-        }
     }
 
     buildTypes {
@@ -78,6 +68,5 @@ android {
 dependencies {
 
     implementation(libs.ezxhelper)
-    implementation(libs.dexkit)
     compileOnly(libs.xposed.api)
 }

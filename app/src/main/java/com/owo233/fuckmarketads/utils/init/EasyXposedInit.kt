@@ -1,7 +1,5 @@
 package com.owo233.fuckmarketads.utils.init
 
-import com.owo233.fuckmarketads.yife.DexKit.closeDexKit
-import com.owo233.fuckmarketads.yife.DexKit.initDexKit
 import com.github.kyuubiran.ezxhelper.EzXHelper
 import com.github.kyuubiran.ezxhelper.LogExtensions.logexIfThrow
 import de.robv.android.xposed.IXposedHookInitPackageResources
@@ -25,9 +23,6 @@ abstract class EasyXposedInit: IXposedHookLoadPackage, IXposedHookZygoteInit,
         registeredApp.forEach { app ->
             if (app.packageName == lpparam.packageName) {
                 EzXHelper.apply {
-                    if (lpparam.packageName != "android") {
-                        initDexKit(lpparam)
-                    }
                     initHandleLoadPackage(lpparam)
                     setLogTag(TAG)
                     setToastTag(TAG)
@@ -35,7 +30,6 @@ abstract class EasyXposedInit: IXposedHookLoadPackage, IXposedHookZygoteInit,
                 runCatching { app.handleLoadPackage(lpparam) }.logexIfThrow("Failed call handleLoadPackage, package: ${app.packageName}")
             }
         }
-        closeDexKit()
     }
 
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam?) {
