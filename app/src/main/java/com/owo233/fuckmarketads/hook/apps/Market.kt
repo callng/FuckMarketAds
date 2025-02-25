@@ -1,5 +1,7 @@
 package com.owo233.fuckmarketads.hook.apps
 
+import com.owo233.fuckmarketads.hook.hooks.market.HideAppSecurity
+import com.owo233.fuckmarketads.hook.hooks.market.HideTab
 import com.owo233.fuckmarketads.hook.hooks.market.RemoveAd
 import com.owo233.fuckmarketads.utils.init.AppRegister
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -9,7 +11,9 @@ object Market : AppRegister() {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         autoInitHooks(
             lpparam,
-            RemoveAd // 移除广告
+            RemoveAd, // 移除广告
+            HideTab, // 隐藏tab
+            HideAppSecurity, // 隐藏应用安全检测
             )
     }
 }

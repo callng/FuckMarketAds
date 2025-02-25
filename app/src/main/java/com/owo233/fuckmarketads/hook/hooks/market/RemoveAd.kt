@@ -11,6 +11,7 @@ object RemoveAd : HookRegister() {
         val appDetailV3Cls = loadClass("com.xiaomi.market.common.network.retrofit.response.bean.AppDetailV3")
         val detailSplashAdManagerCls = loadClass("com.xiaomi.market.ui.splash.DetailSplashAdManager")
         val splashManagerCls = loadClass("com.xiaomi.market.ui.splash.SplashManager")
+        val tabActivityCls = loadClass("com.xiaomi.market.business_ui.main.MarketTabActivity")
 
         appDetailV3Cls.methodFinder().filter {
             name in setOf(
@@ -74,5 +75,20 @@ object RemoveAd : HookRegister() {
         }.toList().createHooks {
             returnConstant(false)
         }
+
+        splashManagerCls.methodFinder().filter {
+            name in setOf(
+                "tryAdSplash",
+                "trySplashWhenApplicationForeground"
+            )
+        }.toList().createHooks {
+            returnConstant(null)
+        }
+
+        tabActivityCls.methodFinder()
+            .filterByName("trySplash")
+            .first().createHook {
+                returnConstant(null)
+            }
     }
 }
