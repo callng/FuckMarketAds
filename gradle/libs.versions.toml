@@ -1,7 +1,7 @@
 [versions]
-agp = "8.8.2"
-kotlin = "2.1.10"
-ezxhelper = "2.2.0"
+agp = "8.10.1"
+kotlin = "2.1.21"
+ezxhelper = "2.2.1"
 xposed = "82"
 
 [libraries]

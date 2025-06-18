@@ -9,9 +9,8 @@ val apkId = "FuckMarketAds"
 
 android {
     namespace = "com.owo233.fuckmarketads"
-    compileSdk = 35
-    buildToolsVersion = "35.0.0"
-    ndkVersion = "28.0.13004108"
+    compileSdk = 36
+    buildToolsVersion = "36.0.0"
 
     buildFeatures {
         prefab = true
@@ -21,9 +20,9 @@ android {
     defaultConfig {
         applicationId = "com.owo233.fuckmarketads"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 4
-        versionName = "1.2.0"
+        targetSdk = 36
+        versionCode = 5
+        versionName = "1.2.1"
         buildConfigField("String", "BUILD_TIME", "\"${System.currentTimeMillis()}\"")
     }
 

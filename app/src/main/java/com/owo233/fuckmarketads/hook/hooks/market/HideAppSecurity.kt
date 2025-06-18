@@ -43,7 +43,7 @@ object HideAppSecurity : HookRegister() {
 
         managerCls.methodFinder()
             .filterByName("isMineAppSecurityCheckOpen")
-            .first().createHook {
+            .firstOrNull()?.createHook {
                 returnConstant(false)
             }
     }
