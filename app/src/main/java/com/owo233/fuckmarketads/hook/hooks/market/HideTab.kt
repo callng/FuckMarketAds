@@ -23,11 +23,21 @@ object HideTab : HookRegister() {
                     val list = (param.result as List<*>).toMutableList()
                     list.removeAll {
                         val tag = tabTagField?.get(it)?.toString() ?: return@removeAll true
+                        /**
+                         * native_market_mine // 我的
+                         * native_market_home // 主页
+                         * native_market_video // 视频号，在4.99.0或之前的某个版本开始没了
+                         * native_market_agent // shit 智能体
+                         * native_app_assemble // shit 应用号
+                         * native_market_game // 游戏
+                         * native_market_rank // 榜单
+                         */
                         when {
                             tag.startsWith("native_app_assemble") -> true
                             tag.startsWith("native_market_game") -> true
                             tag.startsWith("native_market_rank") -> true
                             tag.startsWith("native_market_video") -> true
+                            tag.startsWith("native_market_agent") -> true
                             else -> false
                         }
                     }
