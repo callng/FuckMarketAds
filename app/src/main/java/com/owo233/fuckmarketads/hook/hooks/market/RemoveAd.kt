@@ -6,7 +6,6 @@ import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHooks
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
-import java.lang.reflect.Modifier
 
 object RemoveAd : HookRegister() {
 
@@ -20,11 +19,9 @@ object RemoveAd : HookRegister() {
 
     private val pageCollapseStateExpand by lazy {
         loadClass("com.xiaomi.market.ui.UpdateListRvAdapter\$PageCollapseState")
-            .methodFinder()
-            .filterByName("valueOf")
-            .filterByParamTypes(String::class.java)
-            .filterByModifiers(Modifier.STATIC)
-            .first().invoke(null, "Expand")
+            .getDeclaredField("Expand").apply {
+                isAccessible = true
+            }.get(null)
     }
 
     override fun init() {
@@ -171,9 +168,15 @@ object RemoveAd : HookRegister() {
                 constructor.createHook {
                     after {
                         val thisObj = it.thisObject
-                        thisObj.javaClass.getDeclaredField("forceExpanded").set(thisObj, true)
-                        thisObj.javaClass.getDeclaredField("foldButtonVisible").set(thisObj, false)
-                        thisObj.javaClass.getDeclaredField("pageCollapseState").set(thisObj, pageCollapseStateExpand)
+                        thisObj.javaClass.getDeclaredField("forceExpanded").apply {
+                            isAccessible = true
+                        }.set(thisObj, true)
+                        thisObj.javaClass.getDeclaredField("foldButtonVisible").apply {
+                            isAccessible = true
+                        }.set(thisObj, false)
+                        thisObj.javaClass.getDeclaredField("pageCollapseState").apply {
+                            isAccessible = true
+                        }.set(thisObj, pageCollapseStateExpand)
                     }
                 }
             }
