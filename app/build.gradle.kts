@@ -22,8 +22,8 @@ android {
         applicationId = "com.owo233.fuckmarketads"
         minSdk = 24
         targetSdk = 36
-        versionCode = 18
-        versionName = "1.2.3"
+        versionCode = 21
+        versionName = "1.2.3-fix"
         buildConfigField("String", "BUILD_TIME", "\"${System.currentTimeMillis()}\"")
     }
 
