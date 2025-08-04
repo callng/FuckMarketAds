@@ -6,6 +6,7 @@ import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHooks
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
+import java.lang.reflect.Field
 
 object RemoveAd : HookRegister() {
 
@@ -22,6 +23,34 @@ object RemoveAd : HookRegister() {
             .getDeclaredField("Expand").apply {
                 isAccessible = true
             }.get(null)
+    }
+
+    private fun getDetailType(fieldName: String): Any? {
+        return loadClass("com.xiaomi.market.business_ui.detail.DetailType")
+            .getDeclaredField(fieldName).apply {
+                isAccessible = true
+            }.get(null)
+    }
+
+    private val detailTypeV3 by lazy { getDetailType("V3") }
+    private val detailTypeV4 by lazy { getDetailType("V4") }
+
+    private fun getDeclaredFieldRecursive(
+        clazz: Class<*>,
+        fieldName: String,
+        isOnlySuperClass: Boolean = false
+    ): Field? {
+        var current = if (isOnlySuperClass) clazz.superclass else clazz
+        while (current != null && current != Any::class.java) {
+            try {
+                return current.getDeclaredField(fieldName).apply {
+                    isAccessible = true
+                }
+            } catch (_: NoSuchFieldException) {
+                current = current.superclass
+            }
+        }
+        return null
     }
 
     override fun init() {
@@ -104,9 +133,14 @@ object RemoveAd : HookRegister() {
             }
 
         loadClass("com.xiaomi.market.business_ui.main.MarketTabActivity")
-            .methodFinder()
-            .filterByName("trySplash")
-            .first().createHook {
+            .methodFinder().filter {
+                name in setOf(
+                    "tryShowRecommend",
+                    "tryShowRecallReCommend",
+                    "trySplash",
+                    "fetchSearchHotList"
+                )
+            }.toList().createHooks {
                 returnConstant(null)
             }
 
@@ -195,6 +229,23 @@ object RemoveAd : HookRegister() {
             .filterByName("parseRecommendGroupResult")
             .first().createHook {
                 returnConstant(null)
+            }
+
+        // 应用详情页面
+        loadClass("com.xiaomi.market.ui.detail.BaseDetailActivity")
+            .methodFinder()
+            .filterByName("initParams")
+            .first().createHook {
+                after {
+                    val thisObject = it.thisObject
+                    val field = getDeclaredFieldRecursive(thisObject.javaClass, "detailType")
+                        ?: return@after
+
+                    val currentValue = field.get(thisObject)
+                    if (currentValue == detailTypeV3) {
+                        field.set(thisObject, detailTypeV4)
+                    }
+                }
             }
     }
 }
