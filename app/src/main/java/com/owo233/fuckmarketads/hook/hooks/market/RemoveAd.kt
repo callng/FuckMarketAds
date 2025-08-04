@@ -34,6 +34,7 @@ object RemoveAd : HookRegister() {
 
     private val detailTypeV3 by lazy { getDetailType("V3") }
     private val detailTypeV4 by lazy { getDetailType("V4") }
+    private val detailTypeUnknown by lazy { getDetailType("UNKNOWN") }
 
     private fun getDeclaredFieldRecursive(
         clazz: Class<*>,
@@ -242,7 +243,7 @@ object RemoveAd : HookRegister() {
                         ?: return@after
 
                     val currentValue = field.get(thisObject)
-                    if (currentValue == detailTypeV3) {
+                    if (currentValue == detailTypeV3 || currentValue == detailTypeUnknown) {
                         field.set(thisObject, detailTypeV4)
                     }
                 }
